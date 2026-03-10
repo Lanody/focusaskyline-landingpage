@@ -18,7 +18,42 @@
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
     document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '767179793116137');
-    fbq('track', 'PageView');
+    
+    // Extract UTM parameters and referrer info
+    function getTrackingParams() {
+      var params = new URLSearchParams(window.location.search);
+      var data = {
+        content_name: 'Focus A Skyline',
+        artist: 'Voices of Metropolis',
+        content_type: 'music_album',
+        referrer: document.referrer || 'direct'
+      };
+      
+      // Add UTM parameters if present
+      if (params.get('utm_source')) data.utm_source = params.get('utm_source');
+      if (params.get('utm_medium')) data.utm_medium = params.get('utm_medium');
+      if (params.get('utm_campaign')) data.utm_campaign = params.get('utm_campaign');
+      if (params.get('utm_term')) data.utm_term = params.get('utm_term');
+      if (params.get('utm_content')) data.utm_content = params.get('utm_content');
+      if (params.get('fbclid')) data.fbclid = params.get('fbclid');
+      
+      // Bot detection parameters
+      data.is_webdriver = navigator.webdriver ? 'true' : 'false';
+      data.user_agent = navigator.userAgent;
+      
+      // Check for common bot indicators
+      var botPatterns = /bot|crawler|spider|crawling|headless|phantom|selenium|puppeteer/i;
+      data.bot_suspected = botPatterns.test(navigator.userAgent) ? 'true' : 'false';
+      
+      // Add browser features that bots often lack
+      data.has_plugins = navigator.plugins && navigator.plugins.length > 0 ? 'true' : 'false';
+      data.LanguageSupport = navigator.language || 'unknown';
+      
+      return data;
+    }
+    
+    // Track PageView with all parameters
+    fbq('track', 'PageView', getTrackingParams());
   </script>
   <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=767179793116137&ev=PageView&noscript=1"/></noscript>
@@ -283,7 +318,7 @@
 
       <a class="stream-btn spotify"
          href="https://open.spotify.com/album/7A6nJohryVbeANXsUVaMQY"
-         target="_blank" rel="noopener" onclick="trackView('Spotify')">
+         target="_blank" rel="noopener" onclick="return trackView(event, 'Spotify', this.href)">
         <i class="fa-brands fa-spotify platform-icon"></i>
         Spotify
         <i class="fa-solid fa-arrow-right stream-arrow"></i>
@@ -291,7 +326,7 @@
 
       <a class="stream-btn apple"
          href="https://music.apple.com/de/album/focus-a-skyline/1871717621"
-         target="_blank" rel="noopener" onclick="trackView('Apple Music')">
+         target="_blank" rel="noopener" onclick="return trackView(event, 'Apple Music', this.href)">
         <i class="fa-brands fa-apple platform-icon"></i>
         Apple Music
         <i class="fa-solid fa-arrow-right stream-arrow"></i>
@@ -299,7 +334,7 @@
 
       <a class="stream-btn amazon"
          href="https://music.amazon.de/albums/B0GJMNYSJ4"
-         target="_blank" rel="noopener" onclick="trackView('Amazon Music')">
+         target="_blank" rel="noopener" onclick="return trackView(event, 'Amazon Music', this.href)">
         <i class="fa-brands fa-amazon platform-icon"></i>
         Amazon Music
         <i class="fa-solid fa-arrow-right stream-arrow"></i>
@@ -307,7 +342,7 @@
 
       <a class="stream-btn tidal"
          href="https://tidal.com/album/492553728"
-         target="_blank" rel="noopener" onclick="trackView('Tidal')">
+         target="_blank" rel="noopener" onclick="return trackView(event, 'Tidal', this.href)">
         <i class="fa-solid fa-water platform-icon"></i>
         Tidal
         <i class="fa-solid fa-arrow-right stream-arrow"></i>
@@ -315,7 +350,7 @@
 
       <a class="stream-btn qobuz"
          href="https://open.qobuz.com/album/k5pmfxh0qh1xq"
-         target="_blank" rel="noopener" onclick="trackView('Qobuz')">
+         target="_blank" rel="noopener" onclick="return trackView(event, 'Qobuz', this.href)">
         <i class="fa-solid fa-music platform-icon"></i>
         Qobuz
         <i class="fa-solid fa-arrow-right stream-arrow"></i>
@@ -369,21 +404,85 @@
 </div>
 
 <script>
+  // Get UTM parameters helper function
+  function getUTMParams() {
+    var params = new URLSearchParams(window.location.search);
+    var utm = {};
+    if (params.get('utm_source')) utm.utm_source = params.get('utm_source');
+    if (params.get('utm_medium')) utm.utm_medium = params.get('utm_medium');
+    if (params.get('utm_campaign')) utm.utm_campaign = params.get('utm_campaign');
+    if (params.get('utm_term')) utm.utm_term = params.get('utm_term');
+    if (params.get('utm_content')) utm.utm_content = params.get('utm_content');
+    if (params.get('fbclid')) utm.fbclid = params.get('fbclid');
+    return utm;
+  }
+
+  // Track streaming platform clicks (ViewContent Event)
+  function trackView(event, platform, url) {
+    event.preventDefault();
+    
+    if (typeof fbq !== 'undefined') {
+      var eventData = Object.assign({
+        content_name: 'Focus A Skyline',
+        artist: 'Voices of Metropolis',
+        content_category: 'Music Album',
+        platform: platform,
+        content_type: 'music_link',
+        streaming_platform: platform,
+        destination_url: url,
+        referrer: document.referrer || 'direct'
+      }, getUTMParams());
+      
+      fbq('track', 'ViewContent', eventData);
+      
+      // Wait for pixel to fire, then navigate
+      setTimeout(function() {
+        window.open(url, '_blank');
+      }, 300);
+    } else {
+      // Fallback if pixel not loaded
+      window.open(url, '_blank');
+    }
+    
+    return false;
+  }
+
+  // Track video play
   function playVideo() {
     var box = document.getElementById('videoBox');
     if (box.classList.contains('playing')) return;
+    
+    // Track video play event
+    if (typeof fbq !== 'undefined') {
+      var eventData = Object.assign({
+        content_name: 'Focus A Skyline - Speedpainting',
+        artist: 'Voices of Metropolis',
+        content_category: 'Video',
+        content_type: 'video',
+        video_title: 'Speedpainting - Album Cover',
+        referrer: document.referrer || 'direct'
+      }, getUTMParams());
+      
+      fbq('trackCustom', 'VideoPlay', eventData);
+    }
+    
     document.getElementById('ytFrame').src = document.getElementById('ytFrame').dataset.src;
     box.classList.add('playing');
   }
-  function trackView(platform) {
+
+  // Track time on page (optional - fires after 30 seconds)
+  setTimeout(function() {
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'ViewContent', {
+      var eventData = Object.assign({
         content_name: 'Focus A Skyline',
-        content_category: platform,
-        content_type: 'music_album'
-      });
+        artist: 'Voices of Metropolis',
+        time_on_page: '30_seconds',
+        referrer: document.referrer || 'direct'
+      }, getUTMParams());
+      
+      fbq('trackCustom', 'TimeOnPage', eventData);
     }
-  }
+  }, 30000);
 </script>
 </body>
 </html>
