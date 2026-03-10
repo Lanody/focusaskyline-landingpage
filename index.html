@@ -88,31 +88,50 @@
     /* ── MOBILE BASE ── */
     .page { padding: 0 0 48px; max-width: 600px; margin: 0 auto; }
 
+    .hero { padding: 20px 24px; display: grid; grid-template-columns: 135px 1fr; gap: 18px; align-items: start; }
+
     .cover-wrap { width: 100%; animation: fadeUp .9s ease both; }
     .cover-img {
       width: 100%; display: block; aspect-ratio: 1; object-fit: cover;
-      box-shadow: 0 8px 40px rgba(28,23,16,.25);
+      box-shadow: 0 4px 20px rgba(28,23,16,.25);
     }
 
     .info {
-      padding: 28px 24px 0;
-      display: flex; flex-direction: column; gap: 20px;
+      padding: 0;
+      display: flex; flex-direction: column; gap: 12px;
       animation: fadeUp .9s ease .12s both;
     }
     .eyebrow {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 10px; letter-spacing: 5px; color: var(--ochre);
+      font-size: 10px; letter-spacing: 4px; color: var(--ochre);
     }
     .band-name {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 52px; line-height: .88; color: var(--ink);
+      font-size: 40px; line-height: .92; color: var(--ink);
     }
     .album-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 34px; line-height: 1; letter-spacing: 3px; color: var(--sky);
+      font-size: 28px; line-height: 1; letter-spacing: 2.5px; color: var(--sky);
     }
-    .rule { width: 44px; height: 2px; background: linear-gradient(to right, var(--ochre), var(--orange)); border: none; }
-    .tagline { font-size: 18px; font-weight: 300; font-style: italic; color: var(--muted); line-height: 1.6; }
+    .rule { width: 32px; height: 2px; background: linear-gradient(to right, var(--ochre), var(--orange)); border: none; display: none; }
+    .tagline { display: none; }
+
+    /* Scroll Indicator */
+    .scroll-hint {
+      text-align: center; padding: 16px 24px 4px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 9px; letter-spacing: 3px; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      animation: fadeUp .9s ease .18s both;
+    }
+    .scroll-arrow {
+      font-size: 14px; color: var(--ochre);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(6px); opacity: 0.6; }
+    }
 
     /* Streaming */
     .stream-section { padding: 0 24px; animation: fadeUp .9s ease .24s both; }
@@ -175,6 +194,7 @@
     .video-wrap { padding: 0 24px; animation: fadeUp .9s ease .36s both; }
     .video-container {
       position: relative; width: 100%; aspect-ratio: 16/9;
+      max-height: 200px;
       background: var(--ink); cursor: pointer; overflow: hidden;
       box-shadow: 0 6px 30px rgba(28,23,16,.2); border-radius: 2px;
     }
@@ -185,7 +205,7 @@
       background: rgba(28,23,16,.28);
     }
     .play-circle {
-      width: 64px; height: 64px; border-radius: 50%;
+      width: 48px; height: 48px; border-radius: 50%;
       background: var(--ochre);
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 24px rgba(200,146,10,.55);
@@ -195,10 +215,10 @@
       transform: scale(1.1);
       box-shadow: 0 6px 32px rgba(200,146,10,.7);
     }
-    .play-circle i { font-size: 24px; color: #fff; margin-left: 4px; }
+    .play-circle i { font-size: 18px; color: #fff; margin-left: 3px; }
     .play-label {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 11px; letter-spacing: 4px; color: var(--cream);
+      font-size: 9px; letter-spacing: 3px; color: var(--cream);
       text-shadow: 0 1px 4px rgba(0,0,0,.5);
     }
     .video-container iframe {
@@ -269,8 +289,9 @@
     /* ── DESKTOP ≥ 720px ── */
     @media (min-width: 720px) {
       .page { max-width: 1100px; padding: 56px 48px 72px; }
-      .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-bottom: 56px; }
-      .cover-wrap { width: auto; }
+      .hero { padding: 0; grid-template-columns: 0.85fr 1.15fr; gap: 60px; margin-bottom: 32px; }
+      .cover-wrap { width: auto; max-width: none; }
+      .scroll-hint { display: flex; padding: 0 0 24px; }
       .cover-img {
         box-shadow: 6px 6px 0 rgba(200,146,10,.25), 12px 12px 0 rgba(74,154,191,.12), 0 24px 60px rgba(28,23,16,.2);
         transition: box-shadow .35s, transform .35s;
@@ -280,11 +301,18 @@
         box-shadow: 9px 9px 0 rgba(200,146,10,.3), 18px 18px 0 rgba(74,154,191,.15), 0 30px 70px rgba(28,23,16,.25);
       }
       .info { padding: 8px 0 0; gap: 28px; }
-      .band-name { font-size: 72px; }
-      .album-title { font-size: 44px; }
+      .eyebrow { font-size: 10px; letter-spacing: 5px; }
+      .band-name { font-size: 72px; line-height: .88; }
+      .album-title { font-size: 44px; letter-spacing: 3px; }
+      .rule { display: none; }
+      .tagline { display: none; }
       .stream-section { padding: 0; }
       .section-divider { padding: 0; margin: 8px 0 36px; }
       .video-wrap { padding: 0; }
+      .video-container { max-height: none; }
+      .play-circle { width: 64px; height: 64px; }
+      .play-circle i { font-size: 24px; margin-left: 4px; }
+      .play-label { font-size: 11px; letter-spacing: 4px; }
       footer {
         margin-top: 64px; padding: 24px 0 0;
         flex-direction: row; align-items: center; justify-content: space-between;
@@ -311,9 +339,36 @@
     </div>
   </div>
 
+  <!-- Scroll Hint (Mobile only) -->
+  <div class="scroll-hint">
+    <span>Scroll down to listen</span>
+    <i class="fa-solid fa-chevron-down scroll-arrow"></i>
+  </div>
+
+  <!-- Video -->
+  <div class="section-divider"><span>Speedpainting — Album Cover</span></div>
+  <div class="video-wrap">
+    <div class="video-container" id="videoBox" onclick="playVideo()">
+      <img class="video-thumbnail"
+        src="https://img.youtube.com/vi/ER1hY9RnG3w/maxresdefault.jpg"
+        alt="Speedpainting – Focus A Skyline" />
+      <div class="play-btn">
+        <div class="play-circle">
+          <i class="fa-solid fa-play"></i>
+        </div>
+        <span class="play-label">Watch the Speedpainting</span>
+      </div>
+      <iframe id="ytFrame" src="" data-src="https://www.youtube.com/embed/ER1hY9RnG3w?autoplay=1&rel=0"
+        title="Voices of Metropolis – Focus A Skyline Speedpainting"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+    <p class="video-caption">Voices of Metropolis · Focus A Skyline · 2026</p>
+  </div>
+
   <!-- Streaming -->
+  <div class="section-divider"><span>Listen Now</span></div>
   <div class="stream-section">
-    <span class="stream-label">Listen Now</span>
     <nav class="stream-grid" aria-label="Streaming platforms">
 
       <a class="stream-btn spotify"
@@ -357,27 +412,6 @@
       </a>
 
     </nav>
-  </div>
-
-  <!-- Video -->
-  <div class="section-divider"><span>Speedpainting — Album Cover</span></div>
-  <div class="video-wrap">
-    <div class="video-container" id="videoBox" onclick="playVideo()">
-      <img class="video-thumbnail"
-        src="https://img.youtube.com/vi/ER1hY9RnG3w/maxresdefault.jpg"
-        alt="Speedpainting – Focus A Skyline" />
-      <div class="play-btn">
-        <div class="play-circle">
-          <i class="fa-solid fa-play"></i>
-        </div>
-        <span class="play-label">Watch the Speedpainting</span>
-      </div>
-      <iframe id="ytFrame" src="" data-src="https://www.youtube.com/embed/ER1hY9RnG3w?autoplay=1&rel=0"
-        title="Voices of Metropolis – Focus A Skyline Speedpainting"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen></iframe>
-    </div>
-    <p class="video-caption">Voices of Metropolis · Focus A Skyline · 2026</p>
   </div>
 
   <footer>
