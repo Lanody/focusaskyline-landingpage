@@ -88,6 +88,14 @@
       font-size: 9px; letter-spacing: 3px; color: var(--muted);
       display: flex; flex-direction: column; align-items: center; gap: 8px;
       animation: fadeUp .9s ease .18s both;
+      cursor: pointer;
+      transition: opacity .18s;
+    }
+    .scroll-hint:hover {
+      opacity: 0.7;
+    }
+    .scroll-hint:active {
+      opacity: 0.5;
     }
     .scroll-arrow {
       font-size: 14px; color: var(--ochre);
@@ -305,7 +313,7 @@
   </div>
 
   <!-- Scroll Hint (Mobile only) -->
-  <div class="scroll-hint">
+  <div class="scroll-hint" onclick="scrollToStreaming()">
     <span>Scroll down to listen</span>
     <i class="fa-solid fa-chevron-down scroll-arrow"></i>
   </div>
@@ -333,7 +341,7 @@
 
   <!-- Streaming -->
   <div class="section-divider"><span>Listen Now</span></div>
-  <div class="stream-section">
+  <div class="stream-section" id="streaming">
     <nav class="stream-grid" aria-label="Streaming platforms">
 
       <a class="stream-btn spotify"
@@ -406,6 +414,14 @@
   // ============================================
   // HELPER FUNCTIONS
   // ============================================
+  
+  // Scroll to streaming section
+  function scrollToStreaming() {
+    var streamingSection = document.getElementById('streaming');
+    if (streamingSection) {
+      streamingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   
   // Get UTM parameters helper function
   function getUTMParams() {
